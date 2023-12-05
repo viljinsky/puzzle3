@@ -85,14 +85,17 @@ public class Slicer extends ArrayList<Shape> {
         }
     }
     
-    public Slicer(Puzzle puzzle) {
+    Puzzle3 puzzle;
+    
+    public Slicer(Puzzle3 puzzle) {
+        this.puzzle = puzzle;
         cols = puzzle.cols + 1;
         rows = puzzle.rows + 1;
         for (int col = 0; col < cols; col++) {
             for (int row = 0; row < rows; row++) {
-                Point p = new Point(col * Puzzle.COL_SIZE, row * Puzzle.ROW_SIZE);
-                Point p1 = new Point(p.x + Puzzle.COL_SIZE, p.y);
-                Point p2 = new Point(p.x, p.y + Puzzle.ROW_SIZE);
+                Point p = new Point(col * puzzle.col_size, row * puzzle.row_size);
+                Point p1 = new Point(p.x + puzzle.col_size, p.y);
+                Point p2 = new Point(p.x, p.y + puzzle.row_size);
 
                 int s1 = (int) (Math.signum(0.5 - Math.random()));
                 int s2 = (int) (Math.signum(0.5 - Math.random()));
@@ -117,7 +120,7 @@ public class Slicer extends ArrayList<Shape> {
             }
             
         };
-        panel.setPreferredSize(new Dimension((cols-1)*Puzzle.COL_SIZE, (rows-1)*Puzzle.ROW_SIZE));
+        panel.setPreferredSize(new Dimension((cols-1)*puzzle.col_size, (rows-1)*puzzle.row_size));
         JFrame frame = new JFrame("Slicer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(panel);
@@ -130,7 +133,7 @@ public class Slicer extends ArrayList<Shape> {
 
     public static void main(String[] args) {
 
-        Puzzle puzzle = new Puzzle(12, 17);
+        Puzzle3 puzzle = new Puzzle3(12, 17);
         Slicer graph = new Slicer(puzzle);
         graph.showInFrame(null);
 

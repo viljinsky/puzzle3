@@ -72,7 +72,7 @@ class Browser extends Base implements ChangeListener, CommandListener {
     CommandManager commandManager = new CommandManager(this, "cmd1", "cmd2");
     CommandBar commandBar = new CommandBar(commandManager);
 
-    Puzzle puzzle = new Puzzle();
+    Puzzle3 puzzle = new Puzzle3();
 
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -81,26 +81,26 @@ class Browser extends Base implements ChangeListener, CommandListener {
 
     @Override
     public void doCommand(String command) {
-        System.out.println(command);
-        switch (command) {
-            case "cmd1":
-
-                for (PuzzleItem item : puzzle.list) {
-                    item.theta += Math.PI / 8;
-                }
-                puzzle.change();
-                break;
-
-            case "cmd2":
-                for (PuzzleItem item : puzzle.list) {
-                    int x = (int) (Math.random() * 800);
-                    int y = (int) (Math.random() * 800);
-                    item.setCenter(x, y);
-                }
-                puzzle.change();
-                break;
-
-        }
+//        System.out.println(command);
+//        switch (command) {
+//            case "cmd1":
+//
+//                for (PuzzleItem3 item : puzzle) {
+//                    item.theta += Math.PI / 8;
+//                }
+//                puzzle.change();
+//                break;
+//
+//            case "cmd2":
+//                for (PuzzleItem3 item : puzzle) {
+//                    int x = (int) (Math.random() * 800);
+//                    int y = (int) (Math.random() * 800);
+//                    item.setCenter(x, y);
+//                }
+//                puzzle.change();
+//                break;
+//
+//        }
 
     }
 
@@ -109,7 +109,7 @@ class Browser extends Base implements ChangeListener, CommandListener {
         setLayout(new BorderLayout());
         add(commandBar, BorderLayout.PAGE_START);
         setPreferredSize(new Dimension(800, 600));
-        PuzzleListener listener = new PuzzleListener(puzzle);
+        PuzzleListener3 listener = new PuzzleListener3(puzzle);
         addMouseListener(listener);
         addMouseMotionListener(listener);
         addMouseWheelListener(listener);
