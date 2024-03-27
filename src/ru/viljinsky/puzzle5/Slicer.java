@@ -85,9 +85,9 @@ public class Slicer extends ArrayList<Shape> {
         }
     }
     
-    Puzzle3 puzzle;
+    Puzzle puzzle;
     
-    public Slicer(Puzzle3 puzzle) {
+    public Slicer(Puzzle puzzle) {
         this.puzzle = puzzle;
         cols = puzzle.cols + 1;
         rows = puzzle.rows + 1;
@@ -133,7 +133,7 @@ public class Slicer extends ArrayList<Shape> {
 
     public static void main(String[] args) {
 
-        Puzzle3 puzzle = new Puzzle3(12, 17);
+        Puzzle puzzle = new Puzzle(12, 17);
         Slicer graph = new Slicer(puzzle);
         graph.showInFrame(null);
 

@@ -14,7 +14,6 @@ import java.awt.Image;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -27,12 +26,12 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-class PuzzleListener3 extends MouseAdapter {
+class PuzzleListener extends MouseAdapter {
 
-    Puzzle3 puzzle;
-    PuzzleItem3 selected;
+    Puzzle puzzle;
+    PuzzleItem selected;
 
-    public PuzzleListener3(Puzzle3 puzzle) {
+    public PuzzleListener(Puzzle puzzle) {
         this.puzzle = puzzle;
     }
 
@@ -47,11 +46,11 @@ class PuzzleListener3 extends MouseAdapter {
 
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        PuzzleItem3 item = puzzle.getItem(e.getPoint());
+        PuzzleItem item = puzzle.getItem(e.getPoint());
         System.out.println(e.getWheelRotation());
-        if (item!=null){
-            
-            item.theta += Math.PI/8*e.getPreciseWheelRotation(); 
+        if (item != null) {
+
+            item.theta += Math.PI / 8 * e.getPreciseWheelRotation();
             puzzle.change();
         }
     }
@@ -76,7 +75,7 @@ class PuzzleListener3 extends MouseAdapter {
 
 }
 
-class PuzzleImage3 extends BufferedImage {
+class PuzzleImage extends BufferedImage {
 
     private void init() {
         Graphics2D g = (Graphics2D) getGraphics();
@@ -85,31 +84,29 @@ class PuzzleImage3 extends BufferedImage {
         g.fill(new Rectangle(0, 0, getWidth(), getHeight()));
     }
 
-    public PuzzleImage3() {
+    public PuzzleImage() {
         super(100, 200, TYPE_INT_ARGB);
         init();
     }
-    
-    public PuzzleImage3(int width, int height) {
-        super(width+20, height+20, TYPE_INT_ARGB);
+
+    public PuzzleImage(int width, int height) {
+        super(width + 20, height + 20, TYPE_INT_ARGB);
         init();
     }
 
-
 }
 
-class PuzzleItem3 {
+class PuzzleItem {
 
     int x;
     int y;
     int col;
     int row;
-    Puzzle3 puzzle;
+    Puzzle puzzle;
     Color color = Color.BLUE;
     BufferedImage image;
-    Shape shape;
 
-    public PuzzleItem3(Puzzle3 puzzle, int col, int row) {
+    public PuzzleItem(Puzzle puzzle, int col, int row) {
         this.puzzle = puzzle;
         this.col = col;
         this.row = row;
@@ -120,29 +117,28 @@ class PuzzleItem3 {
     protected Rectangle bound() {
         return new Rectangle(x - puzzle.col_size / 2, y - puzzle.row_size / 2, puzzle.col_size, puzzle.row_size);
     }
-    
+
     double theta = 0.0;
 
     public void paint(Graphics g, ImageObserver observer) {
-        
+
         g.setColor(color);
         Rectangle bound = bound();
 //        g.drawImage(image, bound.x, bound.y, observer);
-        
+
         if (image != null) {
-            
-            Graphics2D g2 = (Graphics2D)g;
+
+            Graphics2D g2 = (Graphics2D) g;
             AffineTransform old = g2.getTransform();
             AffineTransform at = AffineTransform.getRotateInstance(theta, x, y);
-            at.translate(bound.x-10, bound.y-10);
+            at.translate(bound.x - 10, bound.y - 10);
             g2.drawImage(image, at, observer);
             g2.setTransform(old);
-            
+
 //            Shape old = g.getClip();
 //            g.setClip(bound);
 //            g.drawImage(image, bound.x-10, bound.y-10, observer);
 //            g.setClip(old);
-            
         } else {
             g.drawRect(bound.x, bound.y, bound.width, bound.height);
         }
@@ -159,7 +155,7 @@ class PuzzleItem3 {
  *
  * @author viljinsky
  */
-public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
+public class Puzzle extends ArrayList<PuzzleItem> implements ImageObserver {
 
     int cols;
     int rows;
@@ -167,45 +163,36 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
     int row_size = 30;
 
     BufferedImage puzzleImage;
+    
     ChangeListener changeListener;
-    Slicer slicer;
 
     @Override
     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
         return true;
     }
 
-    public Puzzle3() {
+    public Puzzle() {
         this(12, 17);
-        puzzleImage = new PuzzleImage3(cols * col_size, rows * row_size);
+        puzzleImage = new PuzzleImage(cols * col_size, rows * row_size);
     }
 
-    public Puzzle3(int cols, int rows) {
+    public Puzzle(int cols, int rows) {
         this.cols = cols;
         this.rows = rows;
-        puzzleImage = new PuzzleImage3(cols * col_size, rows * row_size);
-        init();
-    }
-    
-    public Puzzle3(BufferedImage image){
-        this.puzzleImage = image;
-        this.cols = (image.getWidth()-20) /col_size;
-        this.rows = (image.getHeight()-20) /col_size;
-        slicer = new Slicer(this);
+        puzzleImage = new PuzzleImage(cols * col_size, rows * row_size);
         init();
     }
 
-    private PuzzleItem3 createItem(int col, int row) {
-        PuzzleItem3 item = new PuzzleItem3(this, col, row);
-//        Shape shape = slicer.shape(col, row);
-//        item.image = new BufferedImage(col_size+20, row_size+20, BufferedImage.TYPE_INT_ARGB);
-//        Graphics2D g2 = (Graphics2D)item.image.getGraphics();
-//        g2.setClip(shape);
-//        AffineTransform at = AffineTransform.getTranslateInstance(-col*col_size, -row*row_size);
-//        g2.drawImage(puzzleImage, at, this);
-        
-        
-        item.image = puzzleImage.getSubimage(col * col_size, row * row_size, col_size+20, row_size+20);
+    public Puzzle(BufferedImage image) {
+        this.puzzleImage = image;
+        this.cols = (image.getWidth() - 20) / col_size;
+        this.rows = (image.getHeight() - 20) / col_size;
+        init();
+    }
+
+    private PuzzleItem createItem(int col, int row) {
+        PuzzleItem item = new PuzzleItem(this, col, row);
+        item.image = puzzleImage.getSubimage(col * col_size, row * row_size, col_size + 20, row_size + 20);
         return item;
     }
 
@@ -218,9 +205,8 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
         }
     }
 
-
-    PuzzleItem3 getItem(Point point) {
-        for (PuzzleItem3 item : this) {
+    PuzzleItem getItem(Point point) {
+        for (PuzzleItem item : this) {
             if (item.bound().contains(point)) {
                 return item;
             }
@@ -228,7 +214,6 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
         return null;
     }
 
-    
     public void change() {
         if (changeListener != null) {
             changeListener.stateChanged(new ChangeEvent(this));
@@ -252,7 +237,7 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                Puzzle3.this.paint(g);
+                Puzzle.this.paint(g);
             }
 
         };
@@ -262,7 +247,7 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
                 pane.repaint();
             }
         };
-        PuzzleListener3 listener = new PuzzleListener3(this);
+        PuzzleListener listener = new PuzzleListener(this);
         pane.addMouseListener(listener);
         pane.addMouseMotionListener(listener);
         pane.addMouseWheelListener(listener);
@@ -277,7 +262,7 @@ public class Puzzle3 extends ArrayList<PuzzleItem3> implements ImageObserver {
     }
 
     public static void main(String[] args) {
-        new Puzzle3().showInFrame(null);
+        new Puzzle().showInFrame(null);
     }
 
 }

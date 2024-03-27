@@ -15,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,9 +29,9 @@ import javax.swing.event.ChangeListener;
 public class Test1 extends JPanel implements ChangeListener{
     
     BufferedImage image;        
-    Puzzle3 puzzle3;
+    Puzzle puzzle;
     Slicer slicer;
-    PuzzleListener3 listener3;
+    PuzzleListener listener;
 
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -41,35 +42,35 @@ public class Test1 extends JPanel implements ChangeListener{
 
     public Test1() {
         setLayout(new BorderLayout());
+        add(new StatusBar(),BorderLayout.PAGE_END);
         setPreferredSize(new Dimension(800,600));
         try{
             image = /*new PuzzleImage3(800, 600) ;*/ImageIO.read(new File("background.jpg"));
-            puzzle3 = new Puzzle3(image);
-            slicer = new Slicer(puzzle3);
-            listener3 = new PuzzleListener3(puzzle3);
-            addMouseListener(listener3);
-            addMouseMotionListener(listener3);
-            addMouseWheelListener(listener3);
-            puzzle3.changeListener = this;
+            puzzle = new Puzzle(image);
+            slicer = new Slicer(puzzle);
+            listener = new PuzzleListener(puzzle);
+            addMouseListener(listener);
+            addMouseMotionListener(listener);
+            addMouseWheelListener(listener);
+            puzzle.changeListener = Test1.this;
             
             
             
-            for(PuzzleItem3 item:puzzle3){
-                item.image = new BufferedImage(puzzle3.col_size+20, puzzle3.row_size+20, BufferedImage.TYPE_INT_ARGB);
+            for(PuzzleItem item:puzzle){
+                item.image = new BufferedImage(puzzle.col_size+20, puzzle.row_size+20, BufferedImage.TYPE_INT_ARGB);
                 Graphics2D g = (Graphics2D)item.image.getGraphics();
-                AffineTransform at = AffineTransform.getTranslateInstance(-item.col*puzzle3.col_size+10,-item.row*puzzle3.row_size+10);
+                AffineTransform at = AffineTransform.getTranslateInstance(-item.col*puzzle.col_size+10,-item.row*puzzle.row_size+10);
                 Shape shape = slicer.shape(item.col, item.row);
                 GeneralPath path = new GeneralPath(shape);
                 path.transform(at);
                 g.setClip(path);
-                g.drawImage(image,at,this);
+                g.drawImage(image,at,Test1.this);
                 g.setColor(Color.red);
                 g.draw(path);
-//                g.fillRect(0,0, puzzle3.col_size,puzzle3.row_size);
             }
             
-        } catch (Exception e){
-            e.printStackTrace();
+        } catch (IOException e){
+            System.err.println("IOException :"+e.getMessage());
         }
     }
 
@@ -77,7 +78,7 @@ public class Test1 extends JPanel implements ChangeListener{
     public void paint(Graphics g) {
         super.paint(g);
         
-        puzzle3.paint(g);
+        puzzle.paint(g);
 
 //        int col = 3;
 //        int row = 5;

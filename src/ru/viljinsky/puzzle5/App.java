@@ -72,7 +72,7 @@ class Browser extends Base implements ChangeListener, CommandListener {
     CommandManager commandManager = new CommandManager(this, "cmd1", "cmd2");
     CommandBar commandBar = new CommandBar(commandManager);
 
-    Puzzle3 puzzle = new Puzzle3();
+    Puzzle puzzle = new Puzzle();
 
     @Override
     public void stateChanged(ChangeEvent e) {
@@ -81,27 +81,6 @@ class Browser extends Base implements ChangeListener, CommandListener {
 
     @Override
     public void doCommand(String command) {
-//        System.out.println(command);
-//        switch (command) {
-//            case "cmd1":
-//
-//                for (PuzzleItem3 item : puzzle) {
-//                    item.theta += Math.PI / 8;
-//                }
-//                puzzle.change();
-//                break;
-//
-//            case "cmd2":
-//                for (PuzzleItem3 item : puzzle) {
-//                    int x = (int) (Math.random() * 800);
-//                    int y = (int) (Math.random() * 800);
-//                    item.setCenter(x, y);
-//                }
-//                puzzle.change();
-//                break;
-//
-//        }
-
     }
 
     public Browser() {
@@ -109,7 +88,7 @@ class Browser extends Base implements ChangeListener, CommandListener {
         setLayout(new BorderLayout());
         add(commandBar, BorderLayout.PAGE_START);
         setPreferredSize(new Dimension(800, 600));
-        PuzzleListener3 listener = new PuzzleListener3(puzzle);
+        PuzzleListener listener = new PuzzleListener(puzzle);
         addMouseListener(listener);
         addMouseMotionListener(listener);
         addMouseWheelListener(listener);
@@ -158,6 +137,13 @@ class Base extends Container implements WindowListener {
             frame = null;
         }
     }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
 
     @Override
     public void windowClosed(WindowEvent e) {
